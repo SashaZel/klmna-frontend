@@ -16,11 +16,20 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
 import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as AdminProjectsIndexImport } from './routes/admin/projects/index'
-import { Route as AdminProjectProjectIdImport } from './routes/admin/project/$projectId'
+import { Route as AdminProjectProjectIdIndexImport } from './routes/admin/project/$projectId/index'
+import { Route as AdminProjectProjectIdPoolPoolIdIndexImport } from './routes/admin/project/$projectId/pool/$poolId/index'
 
 // Create Virtual Routes
 
 const IndexLazyImport = createFileRoute('/')()
+const TaskTaskIdLazyImport = createFileRoute('/task/$taskId')()
+const AdminProjectCreateLazyImport = createFileRoute('/admin/project/create')()
+const AdminProjectProjectIdEditLazyImport = createFileRoute(
+  '/admin/project/$projectId/edit',
+)()
+const AdminProjectProjectIdPoolCreateLazyImport = createFileRoute(
+  '/admin/project/$projectId/pool/create',
+)()
 
 // Create/Update Routes
 
@@ -42,17 +51,60 @@ const AdminIndexRoute = AdminIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const TaskTaskIdLazyRoute = TaskTaskIdLazyImport.update({
+  id: '/task/$taskId',
+  path: '/task/$taskId',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/task/$taskId.lazy').then((d) => d.Route))
+
 const AdminProjectsIndexRoute = AdminProjectsIndexImport.update({
   id: '/admin/projects/',
   path: '/admin/projects/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AdminProjectProjectIdRoute = AdminProjectProjectIdImport.update({
-  id: '/admin/project/$projectId',
-  path: '/admin/project/$projectId',
+const AdminProjectCreateLazyRoute = AdminProjectCreateLazyImport.update({
+  id: '/admin/project/create',
+  path: '/admin/project/create',
   getParentRoute: () => rootRoute,
-} as any)
+} as any).lazy(() =>
+  import('./routes/admin/project/create.lazy').then((d) => d.Route),
+)
+
+const AdminProjectProjectIdIndexRoute = AdminProjectProjectIdIndexImport.update(
+  {
+    id: '/admin/project/$projectId/',
+    path: '/admin/project/$projectId/',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
+
+const AdminProjectProjectIdEditLazyRoute =
+  AdminProjectProjectIdEditLazyImport.update({
+    id: '/admin/project/$projectId/edit',
+    path: '/admin/project/$projectId/edit',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/admin/project/$projectId/edit.lazy').then((d) => d.Route),
+  )
+
+const AdminProjectProjectIdPoolCreateLazyRoute =
+  AdminProjectProjectIdPoolCreateLazyImport.update({
+    id: '/admin/project/$projectId/pool/create',
+    path: '/admin/project/$projectId/pool/create',
+    getParentRoute: () => rootRoute,
+  } as any).lazy(() =>
+    import('./routes/admin/project/$projectId/pool/create.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+
+const AdminProjectProjectIdPoolPoolIdIndexRoute =
+  AdminProjectProjectIdPoolPoolIdIndexImport.update({
+    id: '/admin/project/$projectId/pool/$poolId/',
+    path: '/admin/project/$projectId/pool/$poolId/',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -72,6 +124,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/task/$taskId': {
+      id: '/task/$taskId'
+      path: '/task/$taskId'
+      fullPath: '/task/$taskId'
+      preLoaderRoute: typeof TaskTaskIdLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
@@ -79,11 +138,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexImport
       parentRoute: typeof rootRoute
     }
-    '/admin/project/$projectId': {
-      id: '/admin/project/$projectId'
-      path: '/admin/project/$projectId'
-      fullPath: '/admin/project/$projectId'
-      preLoaderRoute: typeof AdminProjectProjectIdImport
+    '/admin/project/create': {
+      id: '/admin/project/create'
+      path: '/admin/project/create'
+      fullPath: '/admin/project/create'
+      preLoaderRoute: typeof AdminProjectCreateLazyImport
       parentRoute: typeof rootRoute
     }
     '/admin/projects/': {
@@ -91,6 +150,34 @@ declare module '@tanstack/react-router' {
       path: '/admin/projects'
       fullPath: '/admin/projects'
       preLoaderRoute: typeof AdminProjectsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/project/$projectId/edit': {
+      id: '/admin/project/$projectId/edit'
+      path: '/admin/project/$projectId/edit'
+      fullPath: '/admin/project/$projectId/edit'
+      preLoaderRoute: typeof AdminProjectProjectIdEditLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/project/$projectId/': {
+      id: '/admin/project/$projectId/'
+      path: '/admin/project/$projectId'
+      fullPath: '/admin/project/$projectId'
+      preLoaderRoute: typeof AdminProjectProjectIdIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/project/$projectId/pool/create': {
+      id: '/admin/project/$projectId/pool/create'
+      path: '/admin/project/$projectId/pool/create'
+      fullPath: '/admin/project/$projectId/pool/create'
+      preLoaderRoute: typeof AdminProjectProjectIdPoolCreateLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/project/$projectId/pool/$poolId/': {
+      id: '/admin/project/$projectId/pool/$poolId/'
+      path: '/admin/project/$projectId/pool/$poolId'
+      fullPath: '/admin/project/$projectId/pool/$poolId'
+      preLoaderRoute: typeof AdminProjectProjectIdPoolPoolIdIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -101,26 +188,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutRoute
+  '/task/$taskId': typeof TaskTaskIdLazyRoute
   '/admin': typeof AdminIndexRoute
-  '/admin/project/$projectId': typeof AdminProjectProjectIdRoute
+  '/admin/project/create': typeof AdminProjectCreateLazyRoute
   '/admin/projects': typeof AdminProjectsIndexRoute
+  '/admin/project/$projectId/edit': typeof AdminProjectProjectIdEditLazyRoute
+  '/admin/project/$projectId': typeof AdminProjectProjectIdIndexRoute
+  '/admin/project/$projectId/pool/create': typeof AdminProjectProjectIdPoolCreateLazyRoute
+  '/admin/project/$projectId/pool/$poolId': typeof AdminProjectProjectIdPoolPoolIdIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutRoute
+  '/task/$taskId': typeof TaskTaskIdLazyRoute
   '/admin': typeof AdminIndexRoute
-  '/admin/project/$projectId': typeof AdminProjectProjectIdRoute
+  '/admin/project/create': typeof AdminProjectCreateLazyRoute
   '/admin/projects': typeof AdminProjectsIndexRoute
+  '/admin/project/$projectId/edit': typeof AdminProjectProjectIdEditLazyRoute
+  '/admin/project/$projectId': typeof AdminProjectProjectIdIndexRoute
+  '/admin/project/$projectId/pool/create': typeof AdminProjectProjectIdPoolCreateLazyRoute
+  '/admin/project/$projectId/pool/$poolId': typeof AdminProjectProjectIdPoolPoolIdIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/about': typeof AboutRoute
+  '/task/$taskId': typeof TaskTaskIdLazyRoute
   '/admin/': typeof AdminIndexRoute
-  '/admin/project/$projectId': typeof AdminProjectProjectIdRoute
+  '/admin/project/create': typeof AdminProjectCreateLazyRoute
   '/admin/projects/': typeof AdminProjectsIndexRoute
+  '/admin/project/$projectId/edit': typeof AdminProjectProjectIdEditLazyRoute
+  '/admin/project/$projectId/': typeof AdminProjectProjectIdIndexRoute
+  '/admin/project/$projectId/pool/create': typeof AdminProjectProjectIdPoolCreateLazyRoute
+  '/admin/project/$projectId/pool/$poolId/': typeof AdminProjectProjectIdPoolPoolIdIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -128,40 +230,67 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/task/$taskId'
     | '/admin'
-    | '/admin/project/$projectId'
+    | '/admin/project/create'
     | '/admin/projects'
+    | '/admin/project/$projectId/edit'
+    | '/admin/project/$projectId'
+    | '/admin/project/$projectId/pool/create'
+    | '/admin/project/$projectId/pool/$poolId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/task/$taskId'
     | '/admin'
-    | '/admin/project/$projectId'
+    | '/admin/project/create'
     | '/admin/projects'
+    | '/admin/project/$projectId/edit'
+    | '/admin/project/$projectId'
+    | '/admin/project/$projectId/pool/create'
+    | '/admin/project/$projectId/pool/$poolId'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/task/$taskId'
     | '/admin/'
-    | '/admin/project/$projectId'
+    | '/admin/project/create'
     | '/admin/projects/'
+    | '/admin/project/$projectId/edit'
+    | '/admin/project/$projectId/'
+    | '/admin/project/$projectId/pool/create'
+    | '/admin/project/$projectId/pool/$poolId/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AboutRoute: typeof AboutRoute
+  TaskTaskIdLazyRoute: typeof TaskTaskIdLazyRoute
   AdminIndexRoute: typeof AdminIndexRoute
-  AdminProjectProjectIdRoute: typeof AdminProjectProjectIdRoute
+  AdminProjectCreateLazyRoute: typeof AdminProjectCreateLazyRoute
   AdminProjectsIndexRoute: typeof AdminProjectsIndexRoute
+  AdminProjectProjectIdEditLazyRoute: typeof AdminProjectProjectIdEditLazyRoute
+  AdminProjectProjectIdIndexRoute: typeof AdminProjectProjectIdIndexRoute
+  AdminProjectProjectIdPoolCreateLazyRoute: typeof AdminProjectProjectIdPoolCreateLazyRoute
+  AdminProjectProjectIdPoolPoolIdIndexRoute: typeof AdminProjectProjectIdPoolPoolIdIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AboutRoute: AboutRoute,
+  TaskTaskIdLazyRoute: TaskTaskIdLazyRoute,
   AdminIndexRoute: AdminIndexRoute,
-  AdminProjectProjectIdRoute: AdminProjectProjectIdRoute,
+  AdminProjectCreateLazyRoute: AdminProjectCreateLazyRoute,
   AdminProjectsIndexRoute: AdminProjectsIndexRoute,
+  AdminProjectProjectIdEditLazyRoute: AdminProjectProjectIdEditLazyRoute,
+  AdminProjectProjectIdIndexRoute: AdminProjectProjectIdIndexRoute,
+  AdminProjectProjectIdPoolCreateLazyRoute:
+    AdminProjectProjectIdPoolCreateLazyRoute,
+  AdminProjectProjectIdPoolPoolIdIndexRoute:
+    AdminProjectProjectIdPoolPoolIdIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -176,9 +305,14 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
+        "/task/$taskId",
         "/admin/",
-        "/admin/project/$projectId",
-        "/admin/projects/"
+        "/admin/project/create",
+        "/admin/projects/",
+        "/admin/project/$projectId/edit",
+        "/admin/project/$projectId/",
+        "/admin/project/$projectId/pool/create",
+        "/admin/project/$projectId/pool/$poolId/"
       ]
     },
     "/": {
@@ -187,14 +321,29 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.tsx"
     },
+    "/task/$taskId": {
+      "filePath": "task/$taskId.lazy.tsx"
+    },
     "/admin/": {
       "filePath": "admin/index.tsx"
     },
-    "/admin/project/$projectId": {
-      "filePath": "admin/project/$projectId.tsx"
+    "/admin/project/create": {
+      "filePath": "admin/project/create.lazy.tsx"
     },
     "/admin/projects/": {
       "filePath": "admin/projects/index.tsx"
+    },
+    "/admin/project/$projectId/edit": {
+      "filePath": "admin/project/$projectId/edit.lazy.tsx"
+    },
+    "/admin/project/$projectId/": {
+      "filePath": "admin/project/$projectId/index.tsx"
+    },
+    "/admin/project/$projectId/pool/create": {
+      "filePath": "admin/project/$projectId/pool/create.lazy.tsx"
+    },
+    "/admin/project/$projectId/pool/$poolId/": {
+      "filePath": "admin/project/$projectId/pool/$poolId/index.tsx"
     }
   }
 }

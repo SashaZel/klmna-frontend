@@ -7,6 +7,9 @@ export const Route = createFileRoute('/admin/')({
 
 function RouteComponent() {
   return <div>
+    <Link to="/admin/project/create">
+    Create Project
+    </Link>
     <Link to="/admin/projects">
       Link to projects
     </Link>

@@ -1,25 +1,25 @@
 export interface IBduiElements {
-   button: IBduiButton;
-   text: IBduiText;
-   textInput: IBduiTextInput;
+    button: IBduiButton;
+    text: IBduiText;
+    textInput: IBduiTextInput;
 }
 
 export interface IBduiText {
-    type: "text",
-    header?: string;
-    content: string;
+    type: "text";
+    headerPath?: string;
+    contentPath: string;
 }
 
 export interface IBduiButton {
-    type: "button",
+    type: "button";
     value?: string;
     label?: string;
-    onClickOutputPath?: string;
+    outputPath?: string;
 }
 
 export interface IBduiTextInput {
-    type: "textInput",
+    type: "textInput";
     defaultValue?: string;
-    onChangeOutputPath?: string;
+    outputPath?: string;
     placeholder?: string;
 }

@@ -1,7 +1,6 @@
-import * as React from 'react'
-import { createLazyFileRoute } from '@tanstack/react-router'
-import { CreateProject } from '@/components/pages/CreateProject'
+import * as React from "react";
+import { createLazyFileRoute } from "@tanstack/react-router";
 
-export const Route = createLazyFileRoute('/admin/project/create')({
-  component: CreateProject,
-})
+export const Route = createLazyFileRoute("/admin/project/create")({
+    component: () => "dude create something",
+});

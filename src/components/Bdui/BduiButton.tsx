@@ -1,10 +1,23 @@
-import { IBduiButton } from "../types/BDUITypes";
+import { useContext } from "react";
+import { IBduiButton } from "../types/BduiTypes";
 import { Button } from "../ui/button";
+import { SandboxContext } from "../pages/EditProject";
 
 interface IBduiButtonProps {
     element: IBduiButton;
 }
 
 export const BduiButton = ({ element }: IBduiButtonProps) => {
-    return <Button className="mx-1 my-2 block">{element.label}</Button>;
+    const { setSolution } = useContext(SandboxContext);
+    const handleClick = () => {
+        if (element.outputPath) {
+            setSolution(element.outputPath, element.value);
+        }
+    };
+
+    return (
+        <Button className="mx-1 my-2 block" onClick={handleClick}>
+            {element.label}
+        </Button>
+    );
 };

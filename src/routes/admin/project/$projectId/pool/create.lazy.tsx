@@ -1,12 +1,17 @@
-import * as React from 'react'
-import { createLazyFileRoute } from '@tanstack/react-router'
+import * as React from "react";
+import { createLazyFileRoute, useParams } from "@tanstack/react-router";
+import { CreatePool } from "@/components/pages/CreatePool";
 
 export const Route = createLazyFileRoute(
-  '/admin/project/$projectId/pool/create',
+    "/admin/project/$projectId/pool/create",
 )({
-  component: RouteComponent,
-})
+    component: RouteComponent,
+});
 
 function RouteComponent() {
-  return 'Hello /admin/project/$projectId/pool/create!'
+    const { projectId } = useParams({ strict: false });
+    if (!projectId) {
+        return <div>{"Ooops... doesn't exist"}</div>;
+    }
+    return <CreatePool projectId={projectId} />;
 }

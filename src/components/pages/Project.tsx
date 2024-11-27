@@ -73,21 +73,49 @@ export const Project = ({ projectId }: IProjectProps) => {
                     </Link>
                 </Button>
             </div>
-            {project.Pools
-                ? project.Pools.map((pool) => (
-                      <Card key={pool.id} className="mt-4">
-                          <CardHeader>
-                              <CardTitle>{pool.name}</CardTitle>
-                              <CardDescription>
-                                  {pool.description}
-                              </CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                              <div>Created at {pool.created_at}</div>
-                          </CardContent>
-                      </Card>
-                  ))
-                : null}
+            <article className="mt-4 flex justify-between items-start gap-4">
+                <div className="w-2/3">
+                    {project.Pools?.length ? (
+                        project.Pools.map((pool) => (
+                            <Card key={pool.id} className="mt-4">
+                                <CardHeader>
+                                    <CardTitle>{pool.name}</CardTitle>
+                                    <CardDescription>
+                                        {pool.description}
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div>Created at {pool.created_at}</div>
+                                </CardContent>
+                            </Card>
+                        ))
+                    ) : (
+                        <Card>
+                            <CardHeader>No pools yet</CardHeader>
+                        </Card>
+                    )}
+                </div>
+                <Card className="w-1/3">
+                    <CardHeader>
+                        <CardTitle>
+                            Your projects has {project?.Pools?.length || 0}{" "}
+                            pools
+                        </CardTitle>
+                        <CardDescription>
+                            <Button>
+                                <Link
+                                    to="/admin/project/$projectId/pool/create"
+                                    params={{ projectId }}
+                                    className="no-underline text-stone-50"
+                                >
+                                    Create new one
+                                </Link>
+                            </Button>
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>Create pool and upload tasks</CardContent>
+                </Card>
+            </article>
         </>
     );
 };

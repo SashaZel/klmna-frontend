@@ -1,3 +1,4 @@
+import { template } from "lodash";
 import {
     ICreateProject,
     IProject,
@@ -10,6 +11,15 @@ const API_BASE_URL = "http://localhost";
 export const getProjects = async (): Promise<IProjectsResponse> => {
     return fetch(`${API_BASE_URL}/projects`).then((res) => res.json());
 };
+
+export const createApiProject = async (): Promise<IProjectResponse> =>
+    fetch(`${API_BASE_URL}/project`, {
+        method: "POST",
+        body: JSON.stringify({
+            name: "[ New Project ]",
+            template: "{}",
+        }),
+    }).then((res) => res.json());
 
 export const getProject = async (
     projectId: string,
@@ -28,3 +38,18 @@ export const updateApiProject = async (
         body: JSON.stringify(project),
     }).then((res) => res.json());
 };
+
+export const createApiPool = async (
+    projectID: string,
+    poolName: string,
+    poolDescription: string,
+    poolInputTasks: string,
+) =>
+    fetch(`${API_BASE_URL}/project/${projectID}/pool`, {
+        method: "POST",
+        body: JSON.stringify({
+            name: poolName,
+            description: poolDescription,
+            input: poolInputTasks,
+        }),
+    }).then((res) => res.json());

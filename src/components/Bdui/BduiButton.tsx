@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { IBduiButton } from "../types/BduiTypes";
 import { Button } from "../ui/button";
-import { SandboxContext } from "../pages/EditProject";
+import { SandboxContext } from "../blocks/Sandbox";
 
 interface IBduiButtonProps {
     element: IBduiButton;

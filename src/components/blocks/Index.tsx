@@ -1,24 +1,11 @@
 import { createApiProject, getProjects } from "@/api/api";
 import { IProject } from "@/api/types";
 import { useEffect, useState } from "react";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-    Outlet,
-    RouterProvider,
-    Link,
-    createRouter,
-    createRoute,
-    createRootRoute,
-    useNavigate,
-} from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { CirclePlay, Plus } from "lucide-react";
+import { LabelTitle } from "./LabelTitle";
 
 export const Index = () => {
     const [projects, setProjects] = useState<IProject[]>();
@@ -66,25 +53,17 @@ export const Index = () => {
                         <br />
                         where AI get their lessons
                     </h1>
-                    <div className="mt-2 text-stone-300 text-sm">
-                        Welcome to <b>KLMNA</b> platform. The place where you
-                        can learn data for your AI project or just earn
-                        something for accomplish tasks.
+                    <div className="mt-6 text-stone-400 text-sm">
+                        Welcome to <span className="text-stone-200 font-bold">KLMNA</span> platform. <br /> The place
+                        where you can learn data for your AI project or just earn something for accomplish tasks.
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    <Button
-                        onClick={handleGetTask}
-                        className="bg-stone-900 text-stone-50"
-                        variant="outline"
-                    >
-                        Get Task
+                    <Button onClick={handleGetTask} className="w-1/2" variant="ghostDark">
+                        Get Random Task
                     </Button>
-                    <Button
-                        className="bg-yellow-500 text-stone-900 block"
-                        variant="destructive"
-                        onClick={handleCreateProject}
-                    >
+                    <Button className="w-1/2" variant="action" onClick={handleCreateProject}>
+                        <Plus />
                         Create project
                     </Button>
                 </div>
@@ -92,29 +71,55 @@ export const Index = () => {
             <div className="p-2">
                 {projects.length ? (
                     projects.map((project) => (
-                        <Card id={project.ID} className="mt-4">
-                            <CardHeader>
-                                <CardTitle>{project.Name}</CardTitle>
-                                <CardDescription>{project.ID}</CardDescription>
+                        <div key={project.ID} className="mt-4 w-full flex gap-4">
+                            <Card id={project.ID} className="w-2/3">
+                                <CardHeader>
+                                    <CardTitle className="flex justify-between">
+                                        {project.Name}
+                                        <LabelTitle />
+                                    </CardTitle>
+                                    <CardDescription>Project for separate cats from Dogs</CardDescription>
+                                    <CardDescription>{project.ID}</CardDescription>
+                                </CardHeader>
+                            </Card>
+                            <Card className="w-1/3">
+                                <CardHeader>
+                                    <CardTitle>Project action</CardTitle>
+                                    <CardDescription>Task takes about 2 minutes</CardDescription>
+                                </CardHeader>
                                 <CardContent>
-                                    <div>Here is some project</div>
-                                    <Link
-                                        to={"/admin/project/$projectId"}
-                                        params={{ projectId: project.ID }}
-                                    >
-                                        ProjectPage
-                                    </Link>
+                                    <div className="w-full flex justify-between items-center gap-2">
+                                        <Button className="w-1/2" variant="outline">
+                                            <Link
+                                                to={"/admin/project/$projectId"}
+                                                params={{
+                                                    projectId: project.ID,
+                                                }}
+                                            >
+                                                ProjectPage
+                                            </Link>
+                                        </Button>
+                                        <Button className="w-1/2">
+                                            <Link
+                                                to={"/$projectId/task"}
+                                                params={{
+                                                    projectId: project.ID,
+                                                }}
+                                                className="flex items-center gap-2"
+                                            >
+                                                <CirclePlay className="hidden lg:block" /> Take a task
+                                            </Link>
+                                        </Button>
+                                    </div>
                                 </CardContent>
-                            </CardHeader>
-                        </Card>
+                            </Card>
+                        </div>
                     ))
                 ) : (
                     <Card>
                         <CardHeader>
                             <CardTitle>You have no project yet</CardTitle>
-                            <CardDescription>
-                                Create a new one and explore features
-                            </CardDescription>
+                            <CardDescription>Create a new one and explore features</CardDescription>
                         </CardHeader>
                     </Card>
                 )}

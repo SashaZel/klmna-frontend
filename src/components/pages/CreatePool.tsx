@@ -1,30 +1,12 @@
-import { createContext, useEffect, useRef, useState } from "react";
-import { Task } from "../blocks/RenderTask";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
-import * as lodash from "lodash";
-import { createApiPool, getProject, updateApiProject } from "@/api/api";
+import { createApiPool } from "@/api/api";
 import { Input } from "../ui/input";
-import { IProjectResponse } from "@/api/types";
-import {
-    Outlet,
-    RouterProvider,
-    Link,
-    createRouter,
-    createRoute,
-    createRootRoute,
-    useNavigate,
-} from "@tanstack/react-router";
+import { Plus } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
 
 interface ICreatePoolProps {
     projectId: string;
@@ -40,17 +22,10 @@ export const CreatePool = ({ projectId }: ICreatePoolProps) => {
 
     const handleCreate = async () => {
         try {
-            // const stringWithEscape = JSON.stringify(poolInputTasks).replace(/"/g, '\\"');
             let stringWithEscape = "";
-            // stringWithEscape = JSON.stringify(poolInputTasks.map((el) => JSON.stringify(el).replace(/"/g, "'"))).replace(/"/g, '\\"');
             stringWithEscape = JSON.stringify(poolInputTasks.map((el) => JSON.stringify(el).replace(/"/g, "'")));
-            console.log("@handleCreate ... with escape ", stringWithEscape)
-            const result = await createApiPool(
-                projectId,
-                poolName,
-                description,
-                stringWithEscape
-            );
+            console.log("@handleCreate ... with escape ", stringWithEscape);
+            const result = await createApiPool(projectId, poolName, description, stringWithEscape);
             if (result.ok) {
                 navigate({
                     to: "/admin/project/$projectId",
@@ -91,25 +66,21 @@ export const CreatePool = ({ projectId }: ICreatePoolProps) => {
 
     return (
         <article className="min-h-[80vh] w-full">
-            <div className="mt-8 py-6 px-2 w-full min-h-36 rounded-md bg-stone-900 flex justify-between text-stone-50">
+            <div className="mt-8 py-6 px-2 w-full min-h-36 rounded-md flex justify-between text-neutral-50">
                 <div>
                     <Input
-                        className="block text-stone-50 border-none text-2xl md:text-2xl font-bold"
+                        className="block text-neutral-50 bg-plum-950 border-none text-2xl md:text-2xl font-bold"
                         value={poolName}
                         onChange={(e) => setPoolName(e.currentTarget.value)}
                     />
                     <Input
-                        className="mt-2 block text-stone-200 border-none"
+                        className="mt-2 block text-neutral-200 bg-plum-950 border-none"
                         value={description}
                         onChange={(e) => setDescription(e.currentTarget.value)}
                     />
                 </div>
-                <Button
-                    className="bg-yellow-500 text-stone-900 block"
-                    variant="destructive"
-                    onClick={handleCreate}
-                    disabled={!poolInputTasks.length}
-                >
+                <Button variant="action" onClick={handleCreate} disabled={!poolInputTasks.length}>
+                    <Plus />
                     Create Pool
                 </Button>
             </div>
@@ -118,39 +89,24 @@ export const CreatePool = ({ projectId }: ICreatePoolProps) => {
                     <Card>
                         <CardHeader>
                             <CardTitle></CardTitle>
-                            <CardDescription>
-                                Tasks in JSON format
-                            </CardDescription>
+                            <CardDescription>Tasks in JSON format</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <Label htmlFor="tasks">Array of tasks</Label>
-                            <Input
-                                id="tasks"
-                                accept=".json"
-                                onChange={handleFileLoad}
-                                type="file"
-                            />
+                            <Input id="tasks" accept=".json" onChange={handleFileLoad} type="file" />
                         </CardContent>
                     </Card>
                 </div>
                 <div className="mt-2 w-1/3">
                     <Card>
                         <CardHeader>
-                            <CardTitle>
-                                Upload some tasks for a project
-                            </CardTitle>
+                            <CardTitle>Upload some tasks for a project</CardTitle>
                         </CardHeader>
                         <CardContent>
                             {error ? (
                                 <div>
-                                    <Label className="block">
-                                        Uh-uh... there is some errors in your
-                                        tasks
-                                    </Label>
-                                    <Badge
-                                        className="mt-2 block"
-                                        variant="destructive"
-                                    >
+                                    <Label className="block">Uh-uh... there is some errors in your tasks</Label>
+                                    <Badge className="mt-2 block" variant="destructive">
                                         {error}
                                     </Badge>
                                 </div>
@@ -158,9 +114,7 @@ export const CreatePool = ({ projectId }: ICreatePoolProps) => {
                             {poolInputTasks?.length ? (
                                 <div>
                                     <Label className="block">Success!</Label>
-                                    <Badge className="mt-2 block">
-                                        Tasks loaded
-                                    </Badge>
+                                    <Badge className="mt-2 block">Tasks loaded</Badge>
                                 </div>
                             ) : null}
                         </CardContent>

@@ -1,21 +1,7 @@
 import { useEffect, useState } from "react";
 import { IProject } from "@/api/types";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    Outlet,
-    RouterProvider,
-    Link,
-    createRouter,
-    createRoute,
-    createRootRoute,
-} from "@tanstack/react-router";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "@tanstack/react-router";
 import { getProject } from "@/api/api";
 import { Button } from "../ui/button";
 
@@ -42,7 +28,7 @@ export const Project = ({ projectId }: IProjectProps) => {
 
     return (
         <>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
                 <Card className="w-[640px]">
                     <CardHeader>
                         <CardTitle>{project.Name}</CardTitle>
@@ -52,18 +38,12 @@ export const Project = ({ projectId }: IProjectProps) => {
                         <div>Created at {project.CreatedAt}</div>
                     </CardContent>
                     <CardFooter className="flex justify-between">
-                        <Link
-                            to="/admin/project/$projectId/pool/create"
-                            params={{ projectId: projectId }}
-                        >
+                        <Link to="/admin/project/$projectId/pool/create" params={{ projectId: projectId }}>
                             Create new pool
                         </Link>
                     </CardFooter>
                 </Card>
-                <Button
-                    className="bg-yellow-500 text-stone-900 block"
-                    variant="destructive"
-                >
+                <Button variant="action" size="lg">
                     <Link
                         to="/admin/project/$projectId/edit"
                         params={{ projectId }}
@@ -73,16 +53,14 @@ export const Project = ({ projectId }: IProjectProps) => {
                     </Link>
                 </Button>
             </div>
-            <article className="mt-4 flex justify-between items-start gap-4">
+            <article className="mt-4 flex justify-between gap-4">
                 <div className="w-2/3">
                     {project.Pools?.length ? (
                         project.Pools.map((pool) => (
-                            <Card key={pool.id} className="mt-4">
+                            <Card key={pool.id} className="mt-4 h-full">
                                 <CardHeader>
                                     <CardTitle>{pool.name}</CardTitle>
-                                    <CardDescription>
-                                        {pool.description}
-                                    </CardDescription>
+                                    <CardDescription>{pool.description}</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <div>Created at {pool.created_at}</div>
@@ -90,17 +68,14 @@ export const Project = ({ projectId }: IProjectProps) => {
                             </Card>
                         ))
                     ) : (
-                        <Card>
+                        <Card className="h-full">
                             <CardHeader>No pools yet</CardHeader>
                         </Card>
                     )}
                 </div>
                 <Card className="w-1/3">
                     <CardHeader>
-                        <CardTitle>
-                            Your projects has {project?.Pools?.length || 0}{" "}
-                            pools
-                        </CardTitle>
+                        <CardTitle>Your projects has {project?.Pools?.length || 0} pools</CardTitle>
                         <CardDescription>
                             <Button>
                                 <Link

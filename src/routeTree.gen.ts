@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as AboutImport } from './routes/about'
 import { Route as AdminIndexImport } from './routes/admin/index'
+import { Route as ProjectIdTaskImport } from './routes/$projectId/task'
 import { Route as AdminProjectsIndexImport } from './routes/admin/projects/index'
 import { Route as AdminProjectProjectIdIndexImport } from './routes/admin/project/$projectId/index'
 import { Route as AdminProjectProjectIdPoolPoolIdIndexImport } from './routes/admin/project/$projectId/pool/$poolId/index'
@@ -56,6 +57,12 @@ const TaskTaskIdLazyRoute = TaskTaskIdLazyImport.update({
   path: '/task/$taskId',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/task/$taskId.lazy').then((d) => d.Route))
+
+const ProjectIdTaskRoute = ProjectIdTaskImport.update({
+  id: '/$projectId/task',
+  path: '/$projectId/task',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AdminProjectsIndexRoute = AdminProjectsIndexImport.update({
   id: '/admin/projects/',
@@ -124,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/$projectId/task': {
+      id: '/$projectId/task'
+      path: '/$projectId/task'
+      fullPath: '/$projectId/task'
+      preLoaderRoute: typeof ProjectIdTaskImport
+      parentRoute: typeof rootRoute
+    }
     '/task/$taskId': {
       id: '/task/$taskId'
       path: '/task/$taskId'
@@ -188,6 +202,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutRoute
+  '/$projectId/task': typeof ProjectIdTaskRoute
   '/task/$taskId': typeof TaskTaskIdLazyRoute
   '/admin': typeof AdminIndexRoute
   '/admin/project/create': typeof AdminProjectCreateLazyRoute
@@ -201,6 +216,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutRoute
+  '/$projectId/task': typeof ProjectIdTaskRoute
   '/task/$taskId': typeof TaskTaskIdLazyRoute
   '/admin': typeof AdminIndexRoute
   '/admin/project/create': typeof AdminProjectCreateLazyRoute
@@ -215,6 +231,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/about': typeof AboutRoute
+  '/$projectId/task': typeof ProjectIdTaskRoute
   '/task/$taskId': typeof TaskTaskIdLazyRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/project/create': typeof AdminProjectCreateLazyRoute
@@ -230,6 +247,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/$projectId/task'
     | '/task/$taskId'
     | '/admin'
     | '/admin/project/create'
@@ -242,6 +260,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/$projectId/task'
     | '/task/$taskId'
     | '/admin'
     | '/admin/project/create'
@@ -254,6 +273,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/$projectId/task'
     | '/task/$taskId'
     | '/admin/'
     | '/admin/project/create'
@@ -268,6 +288,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AboutRoute: typeof AboutRoute
+  ProjectIdTaskRoute: typeof ProjectIdTaskRoute
   TaskTaskIdLazyRoute: typeof TaskTaskIdLazyRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminProjectCreateLazyRoute: typeof AdminProjectCreateLazyRoute
@@ -281,6 +302,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AboutRoute: AboutRoute,
+  ProjectIdTaskRoute: ProjectIdTaskRoute,
   TaskTaskIdLazyRoute: TaskTaskIdLazyRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminProjectCreateLazyRoute: AdminProjectCreateLazyRoute,
@@ -305,6 +327,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
+        "/$projectId/task",
         "/task/$taskId",
         "/admin/",
         "/admin/project/create",
@@ -320,6 +343,9 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/$projectId/task": {
+      "filePath": "$projectId/task.tsx"
     },
     "/task/$taskId": {
       "filePath": "task/$taskId.lazy.tsx"

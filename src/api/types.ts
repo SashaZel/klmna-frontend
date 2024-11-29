@@ -31,3 +31,13 @@ export interface IPool {
     created_at: string;
     tasks: null;
 }
+
+export interface ITask {
+    ok: boolean;
+    error: string;
+    input: {
+        id: string;
+        input: string;
+    };
+    template: string;
+}

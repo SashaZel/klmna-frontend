@@ -1,7 +1,7 @@
 import { BduiButton } from "../Bdui/BduiButton";
 import { BduiText } from "../Bdui/BduiText";
 import { BduiTextInput } from "../Bdui/BduiTextInput";
-import { IBduiButton, IBduiElements, IBduiTextInput } from "../types/BDUITypes";
+import { IBduiButton, IBduiElements, IBduiTextInput } from "../types/BduiTypes";
 import { Badge } from "@/components/ui/badge";
 
 interface IRenderElementProps {

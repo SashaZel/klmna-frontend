@@ -1,10 +1,5 @@
 import { template } from "lodash";
-import {
-    ICreateProject,
-    IProject,
-    IProjectResponse,
-    IProjectsResponse,
-} from "./types";
+import { ICreateProject, IProject, IProjectResponse, IProjectsResponse, ITask } from "./types";
 
 const API_BASE_URL = "http://localhost";
 
@@ -21,18 +16,11 @@ export const createApiProject = async (): Promise<IProjectResponse> =>
         }),
     }).then((res) => res.json());
 
-export const getProject = async (
-    projectId: string,
-): Promise<IProjectResponse> => {
-    return fetch(`${API_BASE_URL}/project/${projectId}`).then((res) =>
-        res.json(),
-    );
+export const getProject = async (projectId: string): Promise<IProjectResponse> => {
+    return fetch(`${API_BASE_URL}/project/${projectId}`).then((res) => res.json());
 };
 
-export const updateApiProject = async (
-    project: ICreateProject,
-    projectId: string,
-): Promise<IProjectResponse> => {
+export const updateApiProject = async (project: ICreateProject, projectId: string): Promise<IProjectResponse> => {
     return fetch(`${API_BASE_URL}/project/${projectId}/update`, {
         method: "PUT",
         body: JSON.stringify(project),
@@ -53,3 +41,15 @@ export const createApiPool = async (
             input: poolInputTasks,
         }),
     }).then((res) => res.json());
+
+export const getApiRandomTask = async (projectId: string): Promise<ITask> =>
+    fetch(`${API_BASE_URL}/project/${projectId}/random_task`).then((res) => res.json());
+
+export const saveApiTaskSolution = async (taskID: string, solution: string) =>
+    fetch(`${API_BASE_URL}/task/solution`, {
+        method: "PUT",
+        body: JSON.stringify({
+            task_id: taskID,
+            solution,
+        }),
+    });

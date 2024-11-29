@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { IBduiTextInput } from "../types/BduiTypes";
 import { Input } from "@/components/ui/input";
-import { SandboxContext } from "../pages/EditProject";
 import * as lodash from "lodash";
+import { SandboxContext } from "../blocks/Sandbox";
 
 interface IBduiTextInputProps {
     element: IBduiTextInput;
@@ -18,16 +18,7 @@ export const BduiTextInput = ({ element }: IBduiTextInputProps) => {
         }
     };
 
-    const value = element.outputPath
-        ? lodash.get(output, element.outputPath)
-        : "";
+    const value = element.outputPath ? lodash.get(output, element.outputPath) : "";
 
-    return (
-        <Input
-            className="mx-1 my-2 block"
-            placeholder={element.placeholder}
-            onChange={handleInput}
-            value={value}
-        />
-    );
+    return <Input className="mx-1 my-2 block" placeholder={element.placeholder} onChange={handleInput} value={value} />;
 };

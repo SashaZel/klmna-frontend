@@ -8,6 +8,7 @@ import { updateApiProject, useProject } from "@/api/api";
 import { Input } from "../ui/input";
 import { IProject } from "@/api/types";
 import { SandboxContext } from "../blocks/Sandbox";
+import { SkeletonCard } from "../blocks/SkeletonCard";
 
 interface IEditProjectProps {
     projectId: string;
@@ -24,7 +25,7 @@ export const EditProject = ({ projectId }: IEditProjectProps) => {
 
     const { input, setInput, output, setOutput, template, setTemplate } = useContext(SandboxContext);
 
-    const { data, error, isFetched } = useProject(projectId);
+    const { data, error, isFetching } = useProject(projectId);
 
     useEffect(() => {
         const setup = async () => {
@@ -112,8 +113,8 @@ export const EditProject = ({ projectId }: IEditProjectProps) => {
         displayOutput = "< Error stringify output >";
     }
 
-    if (isFetched) {
-        return <div></div>
+    if (isFetching) {
+        return <SkeletonCard />
     }
 
     return (

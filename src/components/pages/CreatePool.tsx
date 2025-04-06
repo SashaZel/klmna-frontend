@@ -15,6 +15,7 @@ interface ICreatePoolProps {
 export const CreatePool = ({ projectId }: ICreatePoolProps) => {
     const [poolName, setPoolName] = useState("[ New pool ]");
     const [description, setDescription] = useState("[ pool description ]");
+    const [textAreaContent, setTextAreaContent] = useState('')
     const [poolInputTasks, setPoolInputTasks] = useState([]);
     const [error, setError] = useState("");
 
@@ -64,6 +65,18 @@ export const CreatePool = ({ projectId }: ICreatePoolProps) => {
         }
     };
 
+    const handleTextInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const value = e.target.value;
+        try {
+            const obj = JSON.parse(value);
+            setError("");
+            setPoolInputTasks(obj);
+        } catch (_error) {
+            setError("Fail to parse input");
+        }
+        setTextAreaContent(value);
+    };
+
     return (
         <article className="min-h-[80vh] w-full">
             <div className="mt-8 py-6 px-2 w-full min-h-36 rounded-md flex justify-between text-neutral-50">
@@ -94,6 +107,10 @@ export const CreatePool = ({ projectId }: ICreatePoolProps) => {
                         <CardContent>
                             <Label htmlFor="tasks">Array of tasks</Label>
                             <Input id="tasks" accept=".json" onChange={handleFileLoad} type="file" />
+                        </CardContent>
+                        <CardContent>
+                            <Label>Or pase text here</Label>
+                            <textarea className="mt-4 block w-full min-h-[560px] border border-gray-300 focus:border-gray-500"  onChange={handleTextInput} value={textAreaContent} />
                         </CardContent>
                     </Card>
                 </div>

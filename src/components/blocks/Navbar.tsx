@@ -23,6 +23,7 @@ export const Navbar = () => {
             <NavbarButton to={"/"} label="Home" />
             <NavbarButton to={"/admin/projects"} label="Projects" />
             <NavbarButton to={"/admin"} label="Admin" />
+            <NavbarButton to={"/docs"} label="Docs" />
             <NavbarButton to={"/about"} label="About" />
         </div>
     );

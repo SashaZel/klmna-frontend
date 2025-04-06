@@ -1,25 +1,15 @@
-import { createApiProject, getProjects } from "@/api/api";
-import { IProject } from "@/api/types";
-import { useEffect, useState } from "react";
+import { createApiProject, useProjects } from "@/api/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { CirclePlay, Plus } from "lucide-react";
 import { LabelTitle } from "./LabelTitle";
+import { SkeletonCard } from "./SkeletonCard";
 
 export const Index = () => {
-    const [projects, setProjects] = useState<IProject[]>();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const setup = async () => {
-            const fetchedProjects = await getProjects();
-            if (fetchedProjects.ok && fetchedProjects.data) {
-                setProjects(fetchedProjects.data);
-            }
-        };
-        setup();
-    }, []);
+    const { data, error, isFetching } = useProjects();
 
     const handleGetTask = async () => {
         alert("not implemented");
@@ -41,9 +31,14 @@ export const Index = () => {
         }
     };
 
-    if (!projects) {
-        return <div>Loading...</div>;
+    if (isFetching) {
+        return <SkeletonCard />
     }
+
+    if (!!error || !data) {
+        return <div>An error occur...</div>
+    }
+
     return (
         <section className="min-h-[80vh]">
             <div className="h-56 flex justify-between items-center">
@@ -69,8 +64,8 @@ export const Index = () => {
                 </div>
             </div>
             <div className="p-2">
-                {projects.length ? (
-                    projects.map((project) => (
+                {data.length ? (
+                    data.map((project) => (
                         <div key={project.ID} className="mt-4 w-full flex gap-4">
                             <Card id={project.ID} className="w-2/3">
                                 <CardHeader>

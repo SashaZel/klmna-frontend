@@ -4,10 +4,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
-import { getProject, updateApiProject } from "@/api/api";
+import { updateApiProject, useProject } from "@/api/api";
 import { Input } from "../ui/input";
-import { IProjectResponse } from "@/api/types";
+import { IProject } from "@/api/types";
 import { SandboxContext } from "../blocks/Sandbox";
+import { SkeletonCard } from "../blocks/SkeletonCard";
 
 interface IEditProjectProps {
     projectId: string;
@@ -24,26 +25,28 @@ export const EditProject = ({ projectId }: IEditProjectProps) => {
 
     const { input, setInput, output, setOutput, template, setTemplate } = useContext(SandboxContext);
 
+    const { data, error, isFetching } = useProject(projectId);
+
     useEffect(() => {
         const setup = async () => {
-            const response = await getProject(projectId);
-            handleResponse(response);
+            if (!data) return;
+            handleResponse(data);
         };
         setup();
-    }, [projectId]);
+    }, [projectId, data]);
 
-    const handleResponse = (response: IProjectResponse) => {
-        if (response.ok && response.data) {
+    const handleResponse = (data: IProject) => {
+        if (data) {
             try {
-                const parsedTemplate = JSON.parse(response.data.Template);
+                const parsedTemplate = JSON.parse(data.Template);
                 const formattedTemplate = JSON.stringify(parsedTemplate, null, 4);
                 setTemplate(parsedTemplate);
                 setTemplateText(formattedTemplate);
-            } catch (error) {
+            } catch (_error) {
                 console.error("@EditProject fetched invalid template");
             }
-            response.data.Name && setProjectName(response.data.Name);
-            response.data.CreatedAt && setProjectCreated(response.data.CreatedAt);
+            data.Name && setProjectName(data.Name);
+            data.CreatedAt && setProjectCreated(data.CreatedAt);
         }
     };
 
@@ -55,7 +58,7 @@ export const EditProject = ({ projectId }: IEditProjectProps) => {
             return;
         }
         const response = await updateApiProject({ name: projectName, template: templateString }, projectId);
-        handleResponse(response);
+        handleResponse(response.data);
     };
 
     const handleTemplateChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -108,6 +111,10 @@ export const EditProject = ({ projectId }: IEditProjectProps) => {
         displayOutput = JSON.stringify(output, null, "\t");
     } catch (_err) {
         displayOutput = "< Error stringify output >";
+    }
+
+    if (isFetching) {
+        return <SkeletonCard />
     }
 
     return (

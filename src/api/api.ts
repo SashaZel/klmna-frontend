@@ -1,11 +1,52 @@
-import { template } from "lodash";
 import { ICreateProject, IProject, IProjectResponse, IProjectsResponse, ITask } from "./types";
+import { useQuery } from "@tanstack/react-query";
 
 const API_BASE_URL = "http://localhost";
 
-export const getProjects = async (): Promise<IProjectsResponse> => {
-    return fetch(`${API_BASE_URL}/projects`).then((res) => res.json());
+/*
+
+const getPostById = async (id: number): Promise<Post> => {
+  const response = await fetch(
+    `https://jsonplaceholder.typicode.com/posts/${id}`,
+  )
+  return await response.json()
+}
+
+function usePost(postId: number) {
+  return useQuery({
+    queryKey: ['post', postId],
+    queryFn: () => getPostById(postId),
+    enabled: !!postId,
+  })
+}
+
+*/
+
+const getProjects = async (): Promise<IProject[]> => {
+    const response = await fetch(`${API_BASE_URL}/projects`);
+    const result: IProjectsResponse = await response.json();
+    return result.data;
 };
+
+export const useProjects = () => {
+    return useQuery({
+        queryKey: ["allProjects"],
+        queryFn: getProjects,
+    });
+};
+
+const getProject = async (projectId: string): Promise<IProject> => {
+    const response = await fetch(`${API_BASE_URL}/project/${projectId}`);
+    const result: IProjectResponse = await response.json();
+    return result.data;
+};
+
+export const useProject = (projectId: string) =>
+    useQuery({
+        queryKey: ["project", "projectId"],
+        queryFn: () => getProject(projectId),
+        enabled: !!projectId,
+    });
 
 export const createApiProject = async (): Promise<IProjectResponse> =>
     fetch(`${API_BASE_URL}/project`, {
@@ -15,10 +56,6 @@ export const createApiProject = async (): Promise<IProjectResponse> =>
             template: "{}",
         }),
     }).then((res) => res.json());
-
-export const getProject = async (projectId: string): Promise<IProjectResponse> => {
-    return fetch(`${API_BASE_URL}/project/${projectId}`).then((res) => res.json());
-};
 
 export const updateApiProject = async (project: ICreateProject, projectId: string): Promise<IProjectResponse> => {
     return fetch(`${API_BASE_URL}/project/${projectId}/update`, {

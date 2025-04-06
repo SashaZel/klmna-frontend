@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as DocsImport } from './routes/docs'
 import { Route as AboutImport } from './routes/about'
 import { Route as AdminIndexImport } from './routes/admin/index'
 import { Route as ProjectIdTaskImport } from './routes/$projectId/task'
@@ -33,6 +34,12 @@ const AdminProjectProjectIdPoolCreateLazyImport = createFileRoute(
 )()
 
 // Create/Update Routes
+
+const DocsRoute = DocsImport.update({
+  id: '/docs',
+  path: '/docs',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AboutRoute = AboutImport.update({
   id: '/about',
@@ -131,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsImport
+      parentRoute: typeof rootRoute
+    }
     '/$projectId/task': {
       id: '/$projectId/task'
       path: '/$projectId/task'
@@ -202,6 +216,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutRoute
+  '/docs': typeof DocsRoute
   '/$projectId/task': typeof ProjectIdTaskRoute
   '/task/$taskId': typeof TaskTaskIdLazyRoute
   '/admin': typeof AdminIndexRoute
@@ -216,6 +231,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/about': typeof AboutRoute
+  '/docs': typeof DocsRoute
   '/$projectId/task': typeof ProjectIdTaskRoute
   '/task/$taskId': typeof TaskTaskIdLazyRoute
   '/admin': typeof AdminIndexRoute
@@ -231,6 +247,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/about': typeof AboutRoute
+  '/docs': typeof DocsRoute
   '/$projectId/task': typeof ProjectIdTaskRoute
   '/task/$taskId': typeof TaskTaskIdLazyRoute
   '/admin/': typeof AdminIndexRoute
@@ -247,6 +264,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/docs'
     | '/$projectId/task'
     | '/task/$taskId'
     | '/admin'
@@ -260,6 +278,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/docs'
     | '/$projectId/task'
     | '/task/$taskId'
     | '/admin'
@@ -273,6 +292,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/docs'
     | '/$projectId/task'
     | '/task/$taskId'
     | '/admin/'
@@ -288,6 +308,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   AboutRoute: typeof AboutRoute
+  DocsRoute: typeof DocsRoute
   ProjectIdTaskRoute: typeof ProjectIdTaskRoute
   TaskTaskIdLazyRoute: typeof TaskTaskIdLazyRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -302,6 +323,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   AboutRoute: AboutRoute,
+  DocsRoute: DocsRoute,
   ProjectIdTaskRoute: ProjectIdTaskRoute,
   TaskTaskIdLazyRoute: TaskTaskIdLazyRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -327,6 +349,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
+        "/docs",
         "/$projectId/task",
         "/task/$taskId",
         "/admin/",
@@ -343,6 +366,9 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/docs": {
+      "filePath": "docs.tsx"
     },
     "/$projectId/task": {
       "filePath": "$projectId/task.tsx"

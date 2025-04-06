@@ -1,5 +1,4 @@
-import { template } from "lodash";
-import { ICreateProject, IProject, IProjectResponse, IProjectsResponse, ITask } from "./types";
+import { ICreateProject, IProjectResponse, IProjectsResponse, ITask } from "./types";
 
 const API_BASE_URL = "http://localhost";
 

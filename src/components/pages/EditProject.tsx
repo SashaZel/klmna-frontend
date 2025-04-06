@@ -39,7 +39,7 @@ export const EditProject = ({ projectId }: IEditProjectProps) => {
                 const formattedTemplate = JSON.stringify(parsedTemplate, null, 4);
                 setTemplate(parsedTemplate);
                 setTemplateText(formattedTemplate);
-            } catch (error) {
+            } catch (_error) {
                 console.error("@EditProject fetched invalid template");
             }
             response.data.Name && setProjectName(response.data.Name);

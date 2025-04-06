@@ -1,29 +1,23 @@
-import { useEffect, useState } from "react";
-import { IProject } from "@/api/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@tanstack/react-router";
-import { getProject } from "@/api/api";
+// import { getProject } from "@/api/api";
 import { Button } from "../ui/button";
+import { useProject } from "@/api/api";
+import { SkeletonCard } from "../blocks/SkeletonCard";
 
 interface IProjectProps {
     projectId: string;
 }
 
 export const Project = ({ projectId }: IProjectProps) => {
-    const [project, setProject] = useState<IProject>();
+    const { data, error, isFetched } = useProject(projectId);
 
-    useEffect(() => {
-        const setup = async () => {
-            const response = await getProject(projectId);
-            if (response.ok && response.data) {
-                setProject(response.data);
-            }
-        };
-        setup();
-    }, [projectId]);
+    if (!isFetched) {
+        return <SkeletonCard />
+    }
 
-    if (!project) {
-        return <div>Loading Project...</div>;
+    if (!!error || !data) {
+        return <div>Error</div>
     }
 
     return (
@@ -31,11 +25,11 @@ export const Project = ({ projectId }: IProjectProps) => {
             <div className="flex justify-between items-center">
                 <Card className="w-[640px]">
                     <CardHeader>
-                        <CardTitle>{project.Name}</CardTitle>
-                        <CardDescription>{project.ID}</CardDescription>
+                        <CardTitle>{data.Name}</CardTitle>
+                        <CardDescription>{data.ID}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div>Created at {project.CreatedAt}</div>
+                        <div>Created at {data.CreatedAt}</div>
                     </CardContent>
                     <CardFooter className="flex justify-between">
                         <Link to="/admin/project/$projectId/pool/create" params={{ projectId: projectId }}>
@@ -55,8 +49,8 @@ export const Project = ({ projectId }: IProjectProps) => {
             </div>
             <article className="mt-4 flex justify-between gap-4">
                 <div className="w-2/3">
-                    {project.Pools?.length ? (
-                        project.Pools.map((pool) => (
+                    {data.Pools?.length ? (
+                        data.Pools.map((pool) => (
                             <Card key={pool.id} className="mt-4 h-full">
                                 <CardHeader>
                                     <CardTitle>{pool.name}</CardTitle>
@@ -75,7 +69,7 @@ export const Project = ({ projectId }: IProjectProps) => {
                 </div>
                 <Card className="w-1/3">
                     <CardHeader>
-                        <CardTitle>Your projects has {project?.Pools?.length || 0} pools</CardTitle>
+                        <CardTitle>Your projects has {data?.Pools?.length || 0} pools</CardTitle>
                         <CardDescription>
                             <Button>
                                 <Link
